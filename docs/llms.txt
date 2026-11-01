@@ -1,0 +1,20 @@
+# Galileu Aberto
+
+> Dados agregados abertos do uso do Galileu (assistente de IA para minutas na Justiça do Trabalho), coletados do painel público. GPL-3.0. Projeto independente. Não contém nomes, usuários nem números de processo.
+
+## Dados (JSON estático; CSV com o mesmo nome)
+- data/resumo.json: totais gerais e data da coleta
+- data/minutas_diarias.json: data, tribunal, minutas
+- data/minutas_mensais_grau.json: ano_mes, tribunal, grau, minutas
+- data/tokens_mensais_tribunal_modelo.json: ano_mes, tribunal, modelo, tokens_entrada, tokens_saida
+- data/requisicoes_mensais_modelo.json: ano_mes, modelo, requisicoes, tokens
+- data/totais_tribunal.json, data/totais_jurisdicao.json, data/totais_modelo.json
+- data/datapackage.json: esquema (Frictionless Data)
+
+## Atenção ao interpretar
+- "minutas" = processos distintos com minuta; NÃO somam entre dias, meses ou graus. Total oficial distinto: ver resumo.json.
+- "requisicoes" = chamadas aos modelos; somam normalmente.
+- Valores de outros períodos podem mudar quando o painel for atualizado.
+
+## Ferramentas
+- mcp/server.py: servidor MCP stdio (resumo, tribunais, serie_diaria, modelos, tokens_mensais)

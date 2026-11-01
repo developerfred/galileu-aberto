@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Galileu Aberto — dados e chat</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://generativelanguage.googleapis.com; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Dados agregados abertos do uso do Galileu (Justiça do Trabalho) e um chat open source para testar os mesmos modelos. GPL-3.0.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231d4ed8'/%3E%3Cpath d='M8 22 14 10l4 8 3-5 3 9' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--ink:#14181f;--mut:#5b6472;--line:#e3e6ee;--acc:#1d4ed8;--acc2:#0ea5a4;--warn:#b45309}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e1118;--card:#171b25;--ink:#e8ebf2;--mut:#98a1b2;--line:#273042;--acc:#6d9bff;--acc2:#3dd6d0;--warn:#f2b45c}}
+:root[data-theme=dark]{--bg:#0e1118;--card:#171b25;--ink:#e8ebf2;--mut:#98a1b2;--line:#273042;--acc:#6d9bff;--acc2:#3dd6d0;--warn:#f2b45c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--acc)}header{padding:28px 16px 8px;max-width:1100px;margin:0 auto}
+h1{margin:0 0 4px;font-size:clamp(1.6rem,4vw,2.2rem);letter-spacing:-.02em}header p{margin:0;color:var(--mut);max-width:70ch}
+nav{position:sticky;top:0;background:var(--bg);z-index:5;border-bottom:1px solid var(--line)}
+nav::after{content:"";position:absolute;right:0;top:0;bottom:0;width:28px;background:linear-gradient(90deg,transparent,var(--bg));pointer-events:none}
+nav .in{max-width:1100px;margin:0 auto;padding:0 16px;display:flex;gap:4px;overflow-x:auto}
+nav button{background:none;border:0;color:var(--mut);padding:12px 12px;font:inherit;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+nav button[aria-selected=true]{color:var(--ink);border-color:var(--acc);font-weight:600}
+nav button:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+main{max-width:1100px;margin:0 auto;padding:16px}section[hidden]{display:none}
+.grid{display:grid;gap:12px}.kpis{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+.kpi b{display:block;font-size:1.9rem;letter-spacing:-.02em}.kpi span{color:var(--mut);font-size:.9rem}
+.two{grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr))}
+h2{font-size:1.1rem;margin:0 0 4px}.sub{color:var(--mut);font-size:.9rem;margin:0 0 10px}
+.chart{position:relative;height:320px}canvas{max-width:100%}
+table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right}th:first-child,td:first-child{text-align:left}
+th{color:var(--mut);font-weight:600}.note{border-left:3px solid var(--warn);padding:8px 12px;background:var(--card);border-radius:0 8px 8px 0;color:var(--mut);font-size:.9rem;margin:12px 0}
+label{display:block;font-size:.85rem;color:var(--mut);margin:8px 0 3px}select,input,textarea{width:100%;font:inherit;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+textarea{min-height:90px;resize:vertical}.btn{background:var(--acc);color:#fff;border:0;border-radius:8px;padding:9px 16px;font:inherit;cursor:pointer}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .btn:not(.sec){color:#0e1118}}
+.btn.sec{background:none;color:var(--acc);border:1px solid var(--line)}.btn:disabled{opacity:.5}
+.msgs{display:flex;flex-direction:column;gap:10px;max-height:460px;overflow:auto;padding:4px}.m{padding:10px 12px;border-radius:10px;white-space:pre-wrap;max-width:92%}
+.m.u{background:var(--acc);color:#fff;align-self:flex-end}@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .m.u{color:#0e1118}}
+.m.a{background:var(--bg);border:1px solid var(--line);align-self:flex-start}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.85rem}pre{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;overflow:auto}
+footer{max-width:1100px;margin:24px auto;padding:0 16px 40px;color:var(--mut);font-size:.85rem}
+.sr{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;background:var(--card);padding:8px 12px;z-index:10}
+html{scroll-padding-top:56px}:focus-visible{outline:2px solid var(--acc);outline-offset:2px}.btn:focus-visible{outline-color:var(--ink)}
+</style>
+</head>
+<body>
+<a class="sr skip" href="#main">Ir ao conteúdo</a>
+<noscript><div class="note" style="max-width:1100px;margin:12px auto">Esta página precisa de JavaScript para os gráficos. Os dados estão em <a href="data/resumo.json">JSON</a>, <a href="llms.txt">llms.txt</a> e <a href="data/datapackage.json">datapackage.json</a>.</div></noscript>
+<header>
+  <h1>Galileu Aberto</h1>
+  <p>Dados agregados do uso do Galileu na Justiça do Trabalho, abertos para pessoas e agentes de IA, e um chat open source para testar os mesmos modelos. Projeto independente, sem vínculo oficial com o TRT4.</p>
+</header>
+<nav><div class="in" role="tablist" aria-label="Seções">
+  <button role="tab" id="tab-geral" aria-controls="geral" aria-selected="true" tabindex="0" data-t="geral">Visão geral</button>
+  <button role="tab" id="tab-trib" aria-controls="trib" aria-selected="false" tabindex="-1" data-t="trib">Tribunais</button>
+  <button role="tab" id="tab-mod" aria-controls="mod" aria-selected="false" tabindex="-1" data-t="mod">Modelos e custo</button>
+  <button role="tab" id="tab-chat" aria-controls="chat" aria-selected="false" tabindex="-1" data-t="chat">Galileu aberto</button>
+  <button role="tab" id="tab-dados" aria-controls="dados" aria-selected="false" tabindex="-1" data-t="dados">Dados e API</button>
+  <button role="tab" id="tab-sobre" aria-controls="sobre" aria-selected="false" tabindex="-1" data-t="sobre">Como ler</button>
+</div></nav>
+<main id="main">
+<section id="geral" role="tabpanel" aria-labelledby="tab-geral" tabindex="0">
+  <div class="grid kpis" id="kpis"></div>
+  <div class="grid two" style="margin-top:12px">
+    <div class="card"><h2>Minutas por mês</h2><p class="sub">Soma dos valores diários por mês. Um processo pode contar em mais de um dia, então a soma não equivale ao total oficial de 458.696.</p><div class="chart"><canvas data-alt id="c-mes" role="img" aria-label="Minutas por mês"></canvas></div></div>
+    <div class="card"><h2>Minutas por jurisdição</h2><p class="sub">Total de processos distintos.</p><div class="chart"><canvas data-alt id="c-jur" role="img" aria-label="Minutas por jurisdição"></canvas></div></div>
+  </div>
+  <div class="card" style="margin-top:12px"><h2>Minutas por dia</h2><p class="sub">Todos os tribunais. Passe o mouse ou toque para ver o valor.</p><div class="chart"><canvas data-alt id="c-dia" role="img" aria-label="Minutas por dia"></canvas></div></div>
+</section>
+<section id="trib" role="tabpanel" aria-labelledby="tab-trib" tabindex="0" hidden>
+  <div class="card"><h2>Minutas por tribunal</h2><p class="sub">Selecione um tribunal para ver a evolução diária.</p>
+    <label for="sel-trib">Tribunal</label><select id="sel-trib"></select>
+    <div class="chart" style="margin-top:10px"><canvas data-alt id="c-trib" role="img" aria-label="Minutas por tribunal"></canvas></div></div>
+  <div class="card" style="margin-top:12px"><h2>Tabela</h2><div style="overflow:auto"><table id="t-trib"></table></div></div>
+</section>
+<section id="mod" role="tabpanel" aria-labelledby="tab-mod" tabindex="0" hidden>
+  <div class="grid two">
+    <div class="card"><h2>Requisições por modelo</h2><p class="sub">Cada requisição é uma chamada ao modelo; uma minuta pode gerar várias.</p><div class="chart"><canvas data-alt id="c-mod" role="img" aria-label="Requisições por modelo"></canvas></div></div>
+    <div class="card"><h2>Tokens por mês e modelo</h2><p class="sub">Tokens de entrada, em bilhões.</p><div class="chart"><canvas data-alt id="c-tok" role="img" aria-label="Tokens por mês"></canvas></div></div>
+  </div>
+  <div class="card" style="margin-top:12px"><h2>Modelos</h2><div style="overflow:auto"><table id="t-mod"></table></div></div>
+</section>
+<section id="chat" role="tabpanel" aria-labelledby="tab-chat" tabindex="0" hidden>
+  <div class="note"><b>Antes de usar.</b> Esta é uma implementação independente: não usa os prompts do Galileu real e não substitui o trabalho de magistrados. <b>Não cole dados reais de processos, nomes ou documentos sigilosos.</b> A conversa vai direto do seu navegador ao Google; sua chave de API fica só neste navegador (sessão) e nunca passa por nós.</div>
+  <div class="grid two">
+    <div class="card">
+      <label for="key">Chave de API do Google AI (Gemini)</label>
+      <input id="key" type="password" autocomplete="off" spellcheck="false" autocapitalize="off" placeholder="Cole sua chave; vale só nesta aba">
+      <label for="model">Modelo</label><select id="model"></select>
+      <label for="sys">Instrução do sistema (editável)</label>
+      <textarea id="sys">Você é um assistente jurídico para a Justiça do Trabalho no Brasil. Ajude a redigir minutas de forma clara, original e fundamentada, em português formal. Sempre indique que o texto é um rascunho que exige revisão humana. Não invente jurisprudência nem números de processo.</textarea>
+      <div class="row" style="margin-top:10px"><button class="btn sec" id="clear">Limpar conversa</button></div>
+    </div>
+    <div class="card"><div class="msgs" id="msgs" role="log" aria-label="Conversa"></div>
+      <label for="in">Mensagem</label><textarea id="in" placeholder="Ctrl/Cmd+Enter envia. Ex.: Redija um modelo de relatório para uma ação de horas extras (dados fictícios)."></textarea>
+      <div class="row" style="margin-top:8px"><button class="btn" id="send">Enviar</button><span id="st" class="sub" role="status" style="margin:0"></span></div></div>
+  </div>
+</section>
+<section id="dados" role="tabpanel" aria-labelledby="tab-dados" tabindex="0" hidden>
+  <div class="card"><h2>Baixar dados</h2><p class="sub">Todos agregados, sem nomes, usuários ou números de processo. CSV e JSON abaixo; Parquet no repositório.</p><ul id="files"></ul></div>
+  <div class="card" style="margin-top:12px"><h2>Para agentes de IA</h2>
+    <p class="sub">Descoberta em <a href="llms.txt">llms.txt</a> e esquema em <a href="data/datapackage.json">datapackage.json</a>. Sem servidor: leia os JSON estáticos.</p>
+    <pre>curl -s <span class="origin">https://developerfred.github.io/galileu-aberto</span>/data/minutas_diarias.json</pre>
+    <p class="sub">Servidor MCP local (stdio) no repositório: <code>mcp/server.py</code>.</p></div>
+  <div class="card" style="margin-top:12px"><h2>Licença</h2><p class="sub">Código e dados sob GPL-3.0. Fonte: painel público do Galileu (Power BI). Veja o README.</p></div>
+</section>
+<section id="sobre" role="tabpanel" aria-labelledby="tab-sobre" tabindex="0" hidden>
+  <div class="card"><h2>Como ler estes números</h2>
+  <ul>
+    <li><b>Minutas</b> são processos distintos com minuta gerada. <b>Não somam entre dias, meses ou graus</b>: um processo pode aparecer em mais de um período. Só o total oficial, 458.696, é distinto no conjunto todo.</li>
+    <li><b>Requisições</b> são registros de uso dos modelos (uma minuta pode gerar várias); essas somam normalmente.</li>
+    <li><b>Tokens</b> medem o volume de texto enviado (entrada) e gerado (saída).</li>
+    <li>Os dados vêm do painel público do Galileu, coletado em <span id="when"></span>. Podem mudar quando o painel for atualizado.</li>
+    <li>Nada aqui identifica magistrados, servidores ou processos.</li>
+  </ul></div>
+</section>
+</main>
+<footer>Galileu Aberto · GPL-3.0 · Projeto independente, não oficial. Marca "Galileu" pertence aos seus titulares.</footer>
+<script src="vendor/chart.umd.min.js" defer></script>
+<script src="app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+{
+ "name": "galileu-aberto",
+ "title": "Galileu Aberto",
+ "licenses": [
+  {
+   "name": "GPL-3.0-or-later",
+   "path": "https://www.gnu.org/licenses/gpl-3.0.html"
+  }
+ ],
+ "sources": [
+  {
+   "title": "Painel público do Galileu (Power BI)"
+  }
+ ],
+ "resources": [
+  {
+   "name": "minutas_diarias",
+   "path": "minutas_diarias.csv",
+   "format": "csv",
+   "mediatype": "text/csv",
+   "description": "Minutas (processos distintos) por dia e tribunal.",
+   "schema": {
+    "fields": [
+     {
+      "name": "data",
+      "type": "string"
+     },
+     {
+      "name": "tribunal",
+      "type": "string"
+     },
+     {
+      "name": "minutas",
+      "type": "integer"
+     }
+    ]
+   }
+  },
+  {
+   "name": "minutas_mensais_grau",
+   "path": "minutas_mensais_grau.csv",
+   "format": "csv",
+   "mediatype": "text/csv",
+   "description": "Minutas por mês, tribunal e grau.",
+   "schema": {
+    "fields": [
+     {
+      "name": "tribunal",
+      "type": "string"
+     },
+     {
+      "name": "ano_mes",
+      "type": "string"
+     },
+     {
+      "name": "grau",
+      "type": "string"
+     },
+     {
+      "name": "minutas",
+      "type": "integer"
+     }
+    ]
+   }
+  },
+  {
+   "name": "tokens_mensais_tribunal_modelo",
+   "path": "tokens_mensais_tribunal_modelo.csv",
+   "format": "csv",
+   "mediatype": "text/csv",
+   "description": "Tokens por mês, tribunal e modelo.",
+   "schema": {
+    "fields": [
+     {
+      "name": "ano_mes",
+      "type": "string"
+     },
+     {
+      "name": "tribunal",
+      "type": "string"
+     },
+     {
+      "name": "modelo",
+      "type": "string"
+     },
+     {
+      "name": "tokens_entrada",
+      "type": "integer"
+     },
+     {
+      "name": "tokens_saida",
+      "type": "integer"
+     }
+    ]
+   }
+  },
+  {
+   "name": "requisicoes_mensais_modelo",
+   "path": "requisicoes_mensais_modelo.csv",
+   "format": "csv",
+   "mediatype": "text/csv",
+   "description": "Requisições e tokens por mês e modelo.",
+   "schema": {
+    "fields": [
+     {
+      "name": "ano_mes",
+      "type": "string"
+     },
+     {
+      "name": "modelo",
+      "type": "string"
+     },
+     {
+      "name": "requisicoes",
+      "type": "integer"
+     },
+     {
+      "name": "tokens_entrada",
+      "type": "integer"
+     },
+     {
+      "name": "tokens_saida",
+      "type": "integer"
+     }
+    ]
+   }
+  },
+  {
+   "name": "totais_tribunal",
+   "path": "totais_tribunal.csv",
+   "format": "csv",
+   "mediatype": "text/csv",
+   "description": "Totais por tribunal (distintos).",
+   "schema": {
+    "fields": [
+     {
+      "name": "tribunal",
+      "type": "string"
+     },
+     {
+      "name": "minutas",
+      "type": "integer"
+     },
+     {
+      "name": "tokens_entrada",
+      "type": "integer"
+     },
+     {
+      "name": "tokens_saida",
+      "type": "integer"
+     }
+    ]
+   }
+  },
+  {
+   "name": "totais_jurisdicao",
+   "path": "totais_jurisdicao.csv",
+   "format": "csv",
+   "mediatype": "text/csv",
+   "description": "Totais por jurisdição.",
+   "schema": {
+    "fields": [
+     {
+      "name": "jurisdicao",
+      "type": "string"
+     },
+     {
+      "name": "minutas",
+      "type": "integer"
+     }
+    ]
+   }
+  },
+  {
+   "name": "totais_modelo",
+   "path": "totais_modelo.csv",
+   "format": "csv",
+   "mediatype": "text/csv",
+   "description": "Totais por modelo.",
+   "schema": {
+    "fields": [
+     {
+      "name": "modelo",
+      "type": "string"
+     },
+     {
+      "name": "requisicoes",
+      "type": "integer"
+     },
+     {
+      "name": "tokens_entrada",
+      "type": "integer"
+     },
+     {
+      "name": "tokens_saida",
+      "type": "integer"
+     }
+    ]
+   }
+  }
+ ]
+}
