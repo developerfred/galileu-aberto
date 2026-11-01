@@ -46,5 +46,14 @@ Só agregados. Células pequenas (por exemplo 1 minuta num dia) existem, mas já
 {"mcpServers":{"galileu-aberto":{"command":"python3","args":["/caminho/mcp/server.py"]}}}
 ```
 
+## Bibliotecas de terceiros (em `docs/vendor/`, licença MIT, compatível com GPL-3.0)
+| Arquivo | Versão | sha256 |
+|---|---|---|
+| `three.module.min.js` | three 0.160.0 | `3e690ac7d180b0aadf0891bea39eec643e29e2d3e75c99b18689518665f69ba6` |
+| `OrbitControls.js` | three 0.160.0, **modificado**: a importação passou de `'three'` para `'./three.module.min.js'` | `099a8f4e3670a9b7299b596fac4dbdce21d5b8ac743b25ff73045882c6d06cf3` |
+| `chart.umd.min.js` | Chart.js 4.4.1 | `d2af8974e95271638772e9e9524db5b9a6f58d6ec2d5d781400447b4a31c681e` |
+
+Textos das licenças: `LICENSE-three.txt` e `LICENSE-chartjs.txt`.
+
 ## Licença
 GPL-3.0 para código e dados (arquivo `LICENSE`).

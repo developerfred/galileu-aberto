@@ -17,12 +17,13 @@ function draw(id, cfg) {
 
 const tabs = [...document.querySelectorAll("nav [role=tab]")];
 const TITLE = document.title;
-function show(t, focus) {
+async function show(t, focus) {
   tabs.forEach((b) => { const on = b.dataset.t === t; b.setAttribute("aria-selected", on); b.tabIndex = on ? 0 : -1; if (on && focus) b.focus(); if (on) b.scrollIntoView({ inline: "center", block: "nearest" }); });
   document.querySelectorAll("main section").forEach((s) => (s.hidden = s.id !== t));
   history.replaceState(null, "", "#" + t);
   document.title = (tabs.find((b) => b.dataset.t === t)?.textContent || "") + " · " + TITLE;
   Object.values(charts).forEach((c) => c.resize());
+  if (t === "d3") import("./viz3d.js").then((m) => (window.GD ? m.init() : window.addEventListener("gd-ready", () => m.init(), { once: true }))).catch(() => { const m = $("#d3-msg"); m.hidden = false; m.textContent = "Não foi possível carregar o 3D. Use as outras abas."; });
 }
 tabs.forEach((b, i) => {
   b.addEventListener("click", () => show(b.dataset.t));

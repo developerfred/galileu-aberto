@@ -164,13 +164,14 @@ async function initViz() {
   Object.assign(D, { resumo, diarias, jur, trib, modelos, reqm, cmm, cm, ct, ptax, tm });
   D.precos = Object.fromEntries(cm.map((r) => [r.modelo, { e: r.preco_entrada_usd_milhao, s: r.preco_saida_usd_milhao }]));
   D.trib = trib.map((r) => Object.assign({}, r, { tokens_entrada: r.tokens_entrada, tokens_saida: r.tokens_saida }));
+  window.GD = D; window.dispatchEvent(new Event("gd-ready"));
   $("#when").textContent = resumo.coletado_em.replace("T", " ").replace("Z", " UTC");
   renderAll();
   $("#m-brl").onclick = () => { moeda = "brl"; renderCusto(); };
   $("#m-usd").onclick = () => { moeda = "usd"; renderCusto(); };
   $("#ml").addEventListener("input", renderAgua); $("#ml-reset").onclick = () => { $("#ml").value = "0.26"; $("#mult").value = "1"; renderAgua(); }; $("#mult").addEventListener("change", renderAgua);
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", renderAll);
-  $("#foco").onclick = (e) => { const on = document.body.classList.toggle("foco"); e.currentTarget.setAttribute("aria-pressed", on); try { localStorage.setItem("foco", on ? "1" : ""); } catch {} Object.values(charts).forEach((c) => c.resize()); };
+  $("#foco").onclick = (e) => { const on = document.body.classList.toggle("foco"); e.currentTarget.setAttribute("aria-pressed", on); try { localStorage.setItem("foco", on ? "1" : ""); } catch {} window.dispatchEvent(new Event("foco-change")); Object.values(charts).forEach((c) => c.resize()); };
   try { if (localStorage.getItem("foco")) { document.body.classList.add("foco"); $("#foco").setAttribute("aria-pressed", "true"); } } catch {}
 }
 initViz().catch((e) => {

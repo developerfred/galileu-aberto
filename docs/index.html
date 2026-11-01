@@ -16,9 +16,9 @@
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 a{color:var(--acc)}header{padding:28px 16px 8px;max-width:1100px;margin:0 auto}
 h1{margin:0 0 4px;font-size:clamp(1.6rem,4vw,2.2rem);letter-spacing:-.02em}header p{margin:0;color:var(--mut);max-width:70ch}
-nav{position:sticky;top:0;background:var(--bg);z-index:5;border-bottom:1px solid var(--line)}
+nav{display:flex;align-items:center;gap:8px;padding-right:16px;position:sticky;top:0;background:var(--bg);z-index:5;border-bottom:1px solid var(--line)}
 nav::after{content:"";position:absolute;right:0;top:0;bottom:0;width:28px;background:linear-gradient(90deg,transparent,var(--bg));pointer-events:none}
-nav .in{max-width:1100px;margin:0 auto;padding:0 16px;display:flex;gap:4px;overflow-x:auto}
+nav .in{flex:1;min-width:0;max-width:1100px;margin:0 auto;padding:0 16px;display:flex;gap:4px;overflow-x:auto}
 nav button{background:none;border:0;color:var(--mut);padding:12px 12px;font:inherit;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
 nav button[aria-selected=true]{color:var(--ink);border-color:var(--acc);font-weight:600}
 nav button:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
@@ -41,10 +41,12 @@ textarea{min-height:90px;resize:vertical}.btn{background:var(--acc);color:#fff;b
 code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.85rem}pre{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;overflow:auto}
 dl{margin:0}dt{font-weight:600;margin-top:10px}dd{margin:2px 0 0;color:var(--mut)}details.alt{margin-top:8px}details.alt summary{cursor:pointer;color:var(--acc);padding:6px 0}.tldr{border-left:4px solid var(--acc)}.tldr ul{margin:6px 0 0;padding-left:20px}.tldr li{margin:6px 0;font-size:1.05rem}
 body.foco .extra{display:none}body.foco *{animation:none!important;transition:none!important}@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.d3host{position:relative;height:520px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg)}.d3host canvas{display:block;width:100%;height:100%;touch-action:none}.d3host canvas:focus-visible{outline:3px solid var(--acc);outline-offset:-3px}.d3tip{position:absolute;pointer-events:none;background:var(--card);border:1px solid var(--line);padding:6px 10px;border-radius:8px;font-size:.85rem;z-index:3}
+@media (max-width:640px){.d3host{height:380px}}
 footer{max-width:1100px;margin:24px auto;padding:0 16px 40px;color:var(--mut);font-size:.85rem}
 .sr{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;background:var(--card);padding:8px 12px;z-index:10}
 html{scroll-padding-top:56px}.indep{font-size:.9rem;margin-top:6px!important}.sub,.note,header p{max-width:75ch}.sub{font-size:.95rem}.result{font-size:1.15rem;font-weight:600;margin:6px 0 12px}
-@media (max-width:640px){nav .in{flex-wrap:wrap;overflow:visible}nav::after{display:none}nav button{padding:8px 10px}}:focus-visible{outline:2px solid var(--acc);outline-offset:2px}.btn:focus-visible{outline-color:var(--ink)}
+@media (max-width:640px){nav{position:static;flex-wrap:wrap}nav .in{flex-wrap:wrap;overflow:visible}nav::after{display:none}nav button{padding:8px 10px}}:focus-visible{outline:2px solid var(--acc);outline-offset:2px}.btn:focus-visible{outline-color:var(--ink)}
 </style>
 </head>
 <body>
@@ -59,6 +61,7 @@ html{scroll-padding-top:56px}.indep{font-size:.9rem;margin-top:6px!important}.su
   <button role="tab" id="tab-geral" aria-controls="geral" aria-selected="true" tabindex="0" data-t="geral">Visão geral</button>
   <button role="tab" id="tab-trib" aria-controls="trib" aria-selected="false" tabindex="-1" data-t="trib">Tribunais</button>
   <button role="tab" id="tab-mod" aria-controls="mod" aria-selected="false" tabindex="-1" data-t="mod">Modelos</button>
+  <button role="tab" id="tab-d3" aria-controls="d3" aria-selected="false" tabindex="-1" data-t="d3">Explorar em 3D</button>
   <button role="tab" id="tab-custo" aria-controls="custo" aria-selected="false" tabindex="-1" data-t="custo">Custo e água</button>
   <button role="tab" id="tab-chat" aria-controls="chat" aria-selected="false" tabindex="-1" data-t="chat">Chat de teste</button>
   <button role="tab" id="tab-dados" aria-controls="dados" aria-selected="false" tabindex="-1" data-t="dados">Dados e API</button>
@@ -87,6 +90,26 @@ html{scroll-padding-top:56px}.indep{font-size:.9rem;margin-top:6px!important}.su
     <div class="card"><h2>Tokens por mês e modelo</h2><p class="sub">Tokens de entrada, em bilhões.</p><div class="chart"><canvas id="c-tok" role="img" aria-label="Tokens por mês"></canvas></div><div id="alt-tok"></div></div>
   </div>
   <div class="card" style="margin-top:12px"><h2>Modelos</h2><div style="overflow:auto"><table id="t-mod"></table></div></div>
+</section>
+<section id="d3" role="tabpanel" aria-labelledby="tab-d3" tabindex="0" hidden>
+  <div class="card">
+    <h2>Explorar em 3D</h2>
+    <ul class="sub" style="padding-left:18px;margin:6px 0"><li><b>O que é:</b> cada barra é um mês de um tribunal (ou de um modelo de IA).</li><li><b>Como ler:</b> mais alta e mais vermelha = maior valor.</li><li><b>Como mexer:</b> arraste para girar, role para aproximar, toque numa barra para ver o número.</li></ul>
+    <div class="row d3ctl" style="margin:10px 0">
+      <div><label for="d3-visao">Comparar</label><select id="d3-visao"><option value="tribunal">Tribunais</option><option value="modelo">Modelos de IA</option></select></div>
+      <div><label for="d3-medida">Medida</label><select id="d3-medida"></select></div>
+      <div><label for="d3-escala">Altura</label><select id="d3-escala"><option value="raiz">Compacta (barras pequenas aparecem)</option><option value="linear">Real (proporcional ao valor)</option></select></div>
+    </div>
+    <p class="note" id="d3-aviso" hidden></p>
+    <p class="sub" id="d3-ajuda">Teclado: setas percorrem as barras; PageUp e PageDown mudam de tribunal ou modelo; Home e End vão ao início e ao fim; Esc limpa; Tab sai do gráfico.</p>
+    <div id="d3-host" class="d3host"><div id="d3-tip" class="d3tip" hidden></div></div>
+    <p id="d3-msg" class="note" role="alert" hidden></p>
+    <p class="sub" id="d3-legenda"></p>
+    <p class="result" id="d3-info" aria-live="polite" style="min-height:1.6em">Toque numa barra, ou foque o gráfico e use as setas.</p>
+    <div class="row d3ctl"><button class="btn sec" id="d3-reset">Recentrar câmera</button><button class="btn sec" id="d3-spin" aria-pressed="false">Girar sozinho</button></div>
+    <p class="sub" id="d3-desc" aria-live="polite" style="margin-top:10px"></p>
+    <div id="d3-alt"></div>
+  </div>
 </section>
 <section id="custo" role="tabpanel" aria-labelledby="tab-custo" tabindex="0" hidden>
   <div class="note"><b>É uma estimativa nossa, a preço de lista; não é número oficial.</b> Multiplicamos o texto processado pela IA (<b>tokens</b>: pedaços de texto, cerca de ¾ de palavra) pelo preço público de cada modelo. Descontos (cache, lote, contrato) não entram, então o tribunal provavelmente pagou menos, não mais. Os preços de alguns modelos antigos vêm do painel e podem diferir da tabela atual do Google.
