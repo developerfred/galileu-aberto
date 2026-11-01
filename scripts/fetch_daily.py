@@ -3,6 +3,7 @@
 import json, sys, time
 sys.path.insert(0, __file__.rsplit("/", 1)[0])
 import extract as e
+FALHAS = []
 T = e.col("t", "", "tribunal_formatado"); M = e.meas("m", "Total Minutas")
 for n in range(1, 25):
     trib = "TRT%02d" % n
@@ -13,3 +14,5 @@ for n in range(1, 25):
         print(trib, "ok", round(time.time() - s), flush=True)
     except Exception as x:
         print(trib, "fail", round(time.time() - s), x, flush=True)
+        FALHAS.append(1)
+sys.exit(1 if FALHAS else 0)

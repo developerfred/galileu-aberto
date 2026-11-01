@@ -18,12 +18,18 @@ def t_tokens(a):
     return [r for r in load("tokens_mensais_tribunal_modelo") if (not a.get("modelo") or r["modelo"] == a["modelo"])
             and (not a.get("tribunal") or r["tribunal"] == a["tribunal"].upper())][:2000]
 
+def t_custos(a):
+    n = {"modelo": "custos_modelo", "tribunal": "custos_tribunal", "mensal": "custos_mensais_modelo"}.get(a.get("por", "modelo"))
+    if not n: raise ValueError("por")
+    return load(n)
+
 S = lambda props: {"type": "object", "properties": props}
 TOOLS = {
  "resumo": ("Totais gerais: minutas distintas, requisições, tokens e data da coleta.", S({}), t_resumo),
  "tribunais": ("Minutas e tokens por tribunal (TRT01..TRT24). Opcional: tribunal.", S({"tribunal": {"type": "string"}}), t_tribunais),
  "serie_diaria": ("Minutas por dia e tribunal. Filtros: tribunal, inicio e fim (AAAA-MM-DD). Minutas não somam entre dias.", S({"tribunal": {"type": "string"}, "inicio": {"type": "string"}, "fim": {"type": "string"}}), t_serie),
  "modelos": ("Requisições e tokens por modelo de IA.", S({}), t_modelos),
+ "custos": ("Custo ESTIMADO em USD e BRL (tokens × preço de tabela × PTAX). por: modelo, tribunal ou mensal. O painel original mostra custo 0 para vários modelos.", S({"por": {"type": "string", "enum": ["modelo", "tribunal", "mensal"]}}), t_custos),
  "tokens_mensais": ("Tokens por mês, tribunal e modelo. Filtros: modelo, tribunal.", S({"modelo": {"type": "string"}, "tribunal": {"type": "string"}}), t_tokens),
 }
 

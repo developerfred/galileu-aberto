@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "Se usar estes dados, cite assim."
+title: "Galileu Aberto: dados agregados de uso do Galileu na Justiça do Trabalho"
+authors:
+  - name: "codingsh"
+license: GPL-3.0-or-later
+repository-code: "https://github.com/developerfred/galileu-aberto"
+url: "https://developerfred.github.io/galileu-aberto/"
+date-released: "2026-11-01"
+notes: "Dados coletados do painel público do Galileu. Custos e água são estimativas."

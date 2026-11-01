@@ -3,6 +3,10 @@
  "tokens_entrada": 122392723136,
  "tokens_saida": 10007840105,
  "requisicoes": 1092488,
- "coletado_em": "2026-11-01T18:17Z",
- "fonte": "Painel público Power BI do Galileu (TRT4/Justiça do Trabalho)"
+ "coletado_em": "2026-11-01",
+ "fonte": "Painel público Power BI do Galileu (TRT4/Justiça do Trabalho)",
+ "custo_usd_estimado": 60692.38,
+ "custo_brl_estimado": 312765.27,
+ "custo_usd_painel": 2906.34,
+ "minutas_distintas_base_custo": 458696
 }

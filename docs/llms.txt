@@ -9,12 +9,15 @@
 - data/tokens_mensais_tribunal_modelo.json: ano_mes, tribunal, modelo, tokens_entrada, tokens_saida
 - data/requisicoes_mensais_modelo.json: ano_mes, modelo, requisicoes, tokens
 - data/totais_tribunal.json, data/totais_jurisdicao.json, data/totais_modelo.json
+- data/custos_modelo.json, custos_tribunal.json, custos_mensais_modelo.json, custos_mensais_tribunal_modelo.json, ptax_mensal.json: custo ESTIMADO em USD e BRL
 - data/datapackage.json: esquema (Frictionless Data)
 
 ## Atenção ao interpretar
+- Custos são ESTIMATIVAS: tokens × preço de tabela público (fonte por linha em custos_modelo) × PTAX média do mês. O painel original mostra custo 0 para os modelos mais usados.
+- Água não é medida: o site usa a referência do Google (0,26 mL por prompt mediano do Gemini, ago/2025) como piso, com multiplicador escolhido pela pessoa.
 - "minutas" = processos distintos com minuta; NÃO somam entre dias, meses ou graus. Total oficial distinto: ver resumo.json.
 - "requisicoes" = chamadas aos modelos; somam normalmente.
 - Valores de outros períodos podem mudar quando o painel for atualizado.
 
 ## Ferramentas
-- mcp/server.py: servidor MCP stdio (resumo, tribunais, serie_diaria, modelos, tokens_mensais)
+- mcp/server.py: servidor MCP stdio (resumo, tribunais, serie_diaria, modelos, custos, tokens_mensais)

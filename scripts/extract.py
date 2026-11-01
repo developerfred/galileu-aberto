@@ -27,7 +27,15 @@ def query(selects, names, limit=30000, tribunal=None):
         "QueryId": "", "ApplicationContext": {"DatasetId": "f7edf664-3294-432a-a5b3-d30bec3d57e2", "Sources": [{"ReportId": "2cf6178a-adf7-4761-a32c-68a459fbfee5", "VisualId": "428613bed6037cd9006d"}]}}],
         "cancelQueries": [], "modelId": MODEL_ID}
 
-def run(q):
+def run(q, tries=3):
+    import time
+    for i in range(tries):
+        try: return _run(q)
+        except Exception:
+            if i == tries - 1: raise
+            time.sleep(5 * (i + 1))
+
+def _run(q):
     req = urllib.request.Request(API, json.dumps(q).encode(), {"Content-Type": "application/json", "X-PowerBI-ResourceKey": KEY, "Accept-Encoding": "gzip"})
     with urllib.request.urlopen(req, timeout=100) as r:
         b = r.read()

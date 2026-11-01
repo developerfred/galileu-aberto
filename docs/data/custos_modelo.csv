@@ -1,0 +1,12 @@
+modelo,requisicoes,tokens_entrada,tokens_saida,usd_estimado,brl_estimado,preco_entrada_usd_milhao,preco_saida_usd_milhao,preco_fonte
+gemini-1.5-flash-002,17799,1685455543,409949137,249.39,1379.27,0.075,0.3,painel
+gemini-1.5-pro-002,19293,945584840,68651869,1525.24,8437.38,1.25,5.0,painel
+gemini-2.0-flash-001,112653,11246703838,947189356,1127.66,5943.09,0.075,0.3,painel
+gemini-2.0-flash-lite-001,23531,106052691,452777,4.04,21.72,0.0375,0.15,painel
+gemini-2.5-flash,279920,12333373569,2050440670,8826.11,45524.72,0.3,2.5,tabela Google 2026-10-30
+gemini-2.5-flash-lite,38306,812489120,16899552,88.01,458.07,0.1,0.4,tabela Google 2026-10-30
+gemini-3-flash-preview,306051,41118188318,3329223244,30546.76,156864.25,0.5,3.0,tabela Google 2026-10-30
+gemini-3.1-flash-lite,292098,53842478127,3174734551,18222.72,93620.64,0.25,1.5,tabela Google 2026-10-30
+gemini-3.1-flash-lite-preview,2594,241391814,8345946,72.87,364.36,0.25,1.5,assumido: igual ao 3.1 Flash-Lite da tabela
+gemini-3.5-flash-lite,93,48516988,1348067,17.93,91.95,0.3,2.5,tabela Google 2026-10-30
+gemini-3.7-flash,150,12488288,604936,11.63,59.84,0.75,3.75,assumido: igual ao 3.6 Flash da tabela

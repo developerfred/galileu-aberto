@@ -43,6 +43,6 @@ for name, df in tables.items():
     print(name, len(df))
 tot = load("total").iloc[0]
 json.dump({"minutas_distintas": int(tot.minutas), "tokens_entrada": int(tot.tokens_entrada), "tokens_saida": int(tot.tokens_saida),
-           "requisicoes": int(tables["totais_modelo"].requisicoes.sum()), "coletado_em": pd.Timestamp.now("UTC").strftime("%Y-%m-%dT%H:%MZ"),
+           "requisicoes": int(tables["totais_modelo"].requisicoes.sum()), "coletado_em": pd.Timestamp(os.path.getmtime(f"{RAW}/total.json"), unit="s", tz="UTC").strftime("%Y-%m-%d"),
            "fonte": "Painel público Power BI do Galileu (TRT4/Justiça do Trabalho)"},
           open("docs/data/resumo.json", "w"), ensure_ascii=False, indent=1)

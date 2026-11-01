@@ -4,6 +4,7 @@ import json, sys, time
 sys.path.insert(0, __file__.rsplit("/", 1)[0])
 import extract as e
 
+FALHAS = []
 T = e.col("t", "", "tribunal_formatado"); M = e.meas("m", "Total Minutas")
 CUBES = {
     "diario": (["tribunal", "data", "minutas"], [T, e.col("d", "", "Data"), M]),
@@ -19,3 +20,5 @@ for name, (names, sel) in CUBES.items():
         print(name, "ok", round(time.time() - s), flush=True)
     except Exception as x:
         print(name, "fail", round(time.time() - s), x, flush=True)
+        FALHAS.append(1)
+sys.exit(1 if FALHAS else 0)

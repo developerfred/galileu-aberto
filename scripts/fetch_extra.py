@@ -7,6 +7,7 @@ import extract as e
 def agg(src, prop, fn):
     return {"Aggregation": {"Expression": e.col(src, "", prop), "Function": fn}}
 
+FALHAS = []
 T = e.col("t", "", "tribunal_formatado"); M = e.meas("m", "Total Minutas")
 CUBES = {
     "total": (["minutas", "tokens_entrada", "tokens_saida"], [M, e.meas("m", "Total Tokens Entrada"), e.meas("m", "Total Tokens Saida")]),
@@ -24,3 +25,5 @@ for name, (names, sel) in CUBES.items():
         print(name, "ok", round(time.time() - s), flush=True)
     except Exception as x:
         print(name, "fail", round(time.time() - s), x, flush=True)
+        FALHAS.append(1)
+sys.exit(1 if FALHAS else 0)

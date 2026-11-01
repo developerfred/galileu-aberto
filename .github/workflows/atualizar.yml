@@ -1,0 +1,31 @@
+name: Atualizar dados
+on:
+  schedule: [{cron: "17 9 * * 1"}]   # segundas, 09:17 UTC
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: atualizar-dados
+  cancel-in-progress: false
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: pip install pandas==2.3.3 pyarrow==22.0.0
+      - run: ./scripts/atualizar.sh
+      - name: Commit só se os dados mudaram
+        run: |
+          git config user.name "codingsh"
+          git config user.email "codingsh@pm.me"
+          git add data docs/data
+          if git diff --cached --quiet -- data docs/data ':(exclude)data/resumo.json' ':(exclude)docs/data/resumo.json'; then
+            echo "Sem mudança nos dados."
+          else
+            git commit -m "Atualiza dados do painel"
+            git pull --rebase origin main
+            git push
+          fi

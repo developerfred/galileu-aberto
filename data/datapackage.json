@@ -1,6 +1,8 @@
 {
  "name": "galileu-aberto",
  "title": "Galileu Aberto",
+ "version": "0.2.0",
+ "homepage": "https://developerfred.github.io/galileu-aberto/",
  "licenses": [
   {
    "name": "GPL-3.0-or-later",
@@ -9,7 +11,15 @@
  ],
  "sources": [
   {
-   "title": "Painel público do Galileu (Power BI)"
+   "title": "Painel público do Galileu (Power BI)",
+   "path": "https://app.powerbi.com/view?r=eyJrIjoiMjU5NTU4NjItYjU3MC00OGI1LWEyNTMtNWY5ZjU2MTkzMGVhIiwidCI6ImIyY2FlYjA4LTI4N2QtNGFmNi1iYjBhLTg4ZmE3N2IyOWIwNiJ9"
+  },
+  {
+   "title": "Preços da API Gemini",
+   "path": "https://ai.google.dev/gemini-api/docs/pricing"
+  },
+  {
+   "title": "PTAX, Banco Central do Brasil"
   }
  ],
  "resources": [
@@ -18,20 +28,23 @@
    "path": "minutas_diarias.csv",
    "format": "csv",
    "mediatype": "text/csv",
-   "description": "Minutas (processos distintos) por dia e tribunal.",
+   "description": "Minutas (processos distintos) por dia e tribunal. Não somam entre dias.",
    "schema": {
     "fields": [
      {
       "name": "data",
-      "type": "string"
+      "type": "string",
+      "description": "Dia (AAAA-MM-DD)."
      },
      {
       "name": "tribunal",
-      "type": "string"
+      "type": "string",
+      "description": "Tribunal Regional do Trabalho, TRT01 a TRT24."
      },
      {
       "name": "minutas",
-      "type": "integer"
+      "type": "integer",
+      "description": "Processos distintos com minuta gerada. NÃO soma entre dias, meses ou graus; só os totais por tribunal e por jurisdição somam o total oficial."
      }
     ]
    }
@@ -46,19 +59,23 @@
     "fields": [
      {
       "name": "tribunal",
-      "type": "string"
+      "type": "string",
+      "description": "Tribunal Regional do Trabalho, TRT01 a TRT24."
      },
      {
       "name": "ano_mes",
-      "type": "string"
+      "type": "string",
+      "description": "Mês (AAAA-MM)."
      },
      {
       "name": "grau",
-      "type": "string"
+      "type": "string",
+      "description": "Grau de jurisdição: 1º Grau ou 2º Grau."
      },
      {
       "name": "minutas",
-      "type": "integer"
+      "type": "integer",
+      "description": "Processos distintos com minuta gerada. NÃO soma entre dias, meses ou graus; só os totais por tribunal e por jurisdição somam o total oficial."
      }
     ]
    }
@@ -73,23 +90,28 @@
     "fields": [
      {
       "name": "ano_mes",
-      "type": "string"
+      "type": "string",
+      "description": "Mês (AAAA-MM)."
      },
      {
       "name": "tribunal",
-      "type": "string"
+      "type": "string",
+      "description": "Tribunal Regional do Trabalho, TRT01 a TRT24."
      },
      {
       "name": "modelo",
-      "type": "string"
+      "type": "string",
+      "description": "Modelo de IA usado (nome da API do Google)."
      },
      {
       "name": "tokens_entrada",
-      "type": "integer"
+      "type": "integer",
+      "description": "Tokens enviados ao modelo (unidade: token)."
      },
      {
       "name": "tokens_saida",
-      "type": "integer"
+      "type": "integer",
+      "description": "Tokens gerados pelo modelo (unidade: token)."
      }
     ]
    }
@@ -99,28 +121,33 @@
    "path": "requisicoes_mensais_modelo.csv",
    "format": "csv",
    "mediatype": "text/csv",
-   "description": "Requisições e tokens por mês e modelo.",
+   "description": "Requisições (somam normalmente) e tokens por mês e modelo.",
    "schema": {
     "fields": [
      {
       "name": "ano_mes",
-      "type": "string"
+      "type": "string",
+      "description": "Mês (AAAA-MM)."
      },
      {
       "name": "modelo",
-      "type": "string"
+      "type": "string",
+      "description": "Modelo de IA usado (nome da API do Google)."
      },
      {
       "name": "requisicoes",
-      "type": "integer"
+      "type": "integer",
+      "description": "Pedidos feitos ao modelo. Somam normalmente; uma minuta pode gerar várias."
      },
      {
       "name": "tokens_entrada",
-      "type": "integer"
+      "type": "integer",
+      "description": "Tokens enviados ao modelo (unidade: token)."
      },
      {
       "name": "tokens_saida",
-      "type": "integer"
+      "type": "integer",
+      "description": "Tokens gerados pelo modelo (unidade: token)."
      }
     ]
    }
@@ -130,24 +157,28 @@
    "path": "totais_tribunal.csv",
    "format": "csv",
    "mediatype": "text/csv",
-   "description": "Totais por tribunal (distintos).",
+   "description": "Totais por tribunal.",
    "schema": {
     "fields": [
      {
       "name": "tribunal",
-      "type": "string"
+      "type": "string",
+      "description": "Tribunal Regional do Trabalho, TRT01 a TRT24."
      },
      {
       "name": "minutas",
-      "type": "integer"
+      "type": "integer",
+      "description": "Processos distintos com minuta gerada. NÃO soma entre dias, meses ou graus; só os totais por tribunal e por jurisdição somam o total oficial."
      },
      {
       "name": "tokens_entrada",
-      "type": "integer"
+      "type": "integer",
+      "description": "Tokens enviados ao modelo (unidade: token)."
      },
      {
       "name": "tokens_saida",
-      "type": "integer"
+      "type": "integer",
+      "description": "Tokens gerados pelo modelo (unidade: token)."
      }
     ]
    }
@@ -162,11 +193,13 @@
     "fields": [
      {
       "name": "jurisdicao",
-      "type": "string"
+      "type": "string",
+      "description": "1º Grau, 2º Grau ou Admis. RR (admissibilidade de recurso de revista)."
      },
      {
       "name": "minutas",
-      "type": "integer"
+      "type": "integer",
+      "description": "Processos distintos com minuta gerada. NÃO soma entre dias, meses ou graus; só os totais por tribunal e por jurisdição somam o total oficial."
      }
     ]
    }
@@ -181,19 +214,253 @@
     "fields": [
      {
       "name": "modelo",
-      "type": "string"
+      "type": "string",
+      "description": "Modelo de IA usado (nome da API do Google)."
      },
      {
       "name": "requisicoes",
-      "type": "integer"
+      "type": "integer",
+      "description": "Pedidos feitos ao modelo. Somam normalmente; uma minuta pode gerar várias."
      },
      {
       "name": "tokens_entrada",
-      "type": "integer"
+      "type": "integer",
+      "description": "Tokens enviados ao modelo (unidade: token)."
      },
      {
       "name": "tokens_saida",
-      "type": "integer"
+      "type": "integer",
+      "description": "Tokens gerados pelo modelo (unidade: token)."
+     }
+    ]
+   }
+  },
+  {
+   "name": "custos_mensais_modelo",
+   "path": "custos_mensais_modelo.csv",
+   "format": "csv",
+   "mediatype": "text/csv",
+   "description": "Custo estimado (USD e BRL) por mês e modelo: tokens × preço de tabela × PTAX média do mês.",
+   "schema": {
+    "fields": [
+     {
+      "name": "ano_mes",
+      "type": "string",
+      "description": "Mês (AAAA-MM)."
+     },
+     {
+      "name": "modelo",
+      "type": "string",
+      "description": "Modelo de IA usado (nome da API do Google)."
+     },
+     {
+      "name": "requisicoes",
+      "type": "integer",
+      "description": "Pedidos feitos ao modelo. Somam normalmente; uma minuta pode gerar várias."
+     },
+     {
+      "name": "tokens_entrada",
+      "type": "integer",
+      "description": "Tokens enviados ao modelo (unidade: token)."
+     },
+     {
+      "name": "tokens_saida",
+      "type": "integer",
+      "description": "Tokens gerados pelo modelo (unidade: token)."
+     },
+     {
+      "name": "usd_estimado",
+      "type": "number",
+      "description": "Custo estimado em dólares (US$): tokens × preço de tabela."
+     },
+     {
+      "name": "ptax_venda_media",
+      "type": "number",
+      "description": "Cotação PTAX de venda, média do mês (R$ por US$)."
+     },
+     {
+      "name": "brl_estimado",
+      "type": "number",
+      "description": "Custo estimado em reais (R$): usd_estimado × PTAX média do mês."
+     }
+    ]
+   }
+  },
+  {
+   "name": "custos_mensais_tribunal_modelo",
+   "path": "custos_mensais_tribunal_modelo.csv",
+   "format": "csv",
+   "mediatype": "text/csv",
+   "description": "Custo estimado por mês, tribunal e modelo.",
+   "schema": {
+    "fields": [
+     {
+      "name": "ano_mes",
+      "type": "string",
+      "description": "Mês (AAAA-MM)."
+     },
+     {
+      "name": "tribunal",
+      "type": "string",
+      "description": "Tribunal Regional do Trabalho, TRT01 a TRT24."
+     },
+     {
+      "name": "modelo",
+      "type": "string",
+      "description": "Modelo de IA usado (nome da API do Google)."
+     },
+     {
+      "name": "tokens_entrada",
+      "type": "integer",
+      "description": "Tokens enviados ao modelo (unidade: token)."
+     },
+     {
+      "name": "tokens_saida",
+      "type": "integer",
+      "description": "Tokens gerados pelo modelo (unidade: token)."
+     },
+     {
+      "name": "usd_estimado",
+      "type": "number",
+      "description": "Custo estimado em dólares (US$): tokens × preço de tabela."
+     },
+     {
+      "name": "ptax_venda_media",
+      "type": "number",
+      "description": "Cotação PTAX de venda, média do mês (R$ por US$)."
+     },
+     {
+      "name": "brl_estimado",
+      "type": "number",
+      "description": "Custo estimado em reais (R$): usd_estimado × PTAX média do mês."
+     }
+    ]
+   }
+  },
+  {
+   "name": "custos_tribunal",
+   "path": "custos_tribunal.csv",
+   "format": "csv",
+   "mediatype": "text/csv",
+   "description": "Custo estimado e custo por minuta por tribunal.",
+   "schema": {
+    "fields": [
+     {
+      "name": "tribunal",
+      "type": "string",
+      "description": "Tribunal Regional do Trabalho, TRT01 a TRT24."
+     },
+     {
+      "name": "tokens_entrada",
+      "type": "integer",
+      "description": "Tokens enviados ao modelo (unidade: token)."
+     },
+     {
+      "name": "tokens_saida",
+      "type": "integer",
+      "description": "Tokens gerados pelo modelo (unidade: token)."
+     },
+     {
+      "name": "usd_estimado",
+      "type": "number",
+      "description": "Custo estimado em dólares (US$): tokens × preço de tabela."
+     },
+     {
+      "name": "brl_estimado",
+      "type": "number",
+      "description": "Custo estimado em reais (R$): usd_estimado × PTAX média do mês."
+     },
+     {
+      "name": "minutas",
+      "type": "integer",
+      "description": "Processos distintos com minuta gerada. NÃO soma entre dias, meses ou graus; só os totais por tribunal e por jurisdição somam o total oficial."
+     },
+     {
+      "name": "brl_por_minuta",
+      "type": "number",
+      "description": "Custo estimado em R$ dividido pelas minutas distintas do tribunal."
+     }
+    ]
+   }
+  },
+  {
+   "name": "custos_modelo",
+   "path": "custos_modelo.csv",
+   "format": "csv",
+   "mediatype": "text/csv",
+   "description": "Custo ESTIMADO (não oficial) por modelo, com os preços usados e sua fonte.",
+   "schema": {
+    "fields": [
+     {
+      "name": "modelo",
+      "type": "string",
+      "description": "Modelo de IA usado (nome da API do Google)."
+     },
+     {
+      "name": "requisicoes",
+      "type": "integer",
+      "description": "Pedidos feitos ao modelo. Somam normalmente; uma minuta pode gerar várias."
+     },
+     {
+      "name": "tokens_entrada",
+      "type": "integer",
+      "description": "Tokens enviados ao modelo (unidade: token)."
+     },
+     {
+      "name": "tokens_saida",
+      "type": "integer",
+      "description": "Tokens gerados pelo modelo (unidade: token)."
+     },
+     {
+      "name": "usd_estimado",
+      "type": "number",
+      "description": "Custo estimado em dólares (US$): tokens × preço de tabela."
+     },
+     {
+      "name": "brl_estimado",
+      "type": "number",
+      "description": "Custo estimado em reais (R$): usd_estimado × PTAX média do mês."
+     },
+     {
+      "name": "preco_entrada_usd_milhao",
+      "type": "number",
+      "description": "Preço usado, US$ por milhão de tokens de entrada."
+     },
+     {
+      "name": "preco_saida_usd_milhao",
+      "type": "number",
+      "description": "Preço usado, US$ por milhão de tokens de saída."
+     },
+     {
+      "name": "preco_fonte",
+      "type": "string",
+      "description": "Origem do preço: painel, tabela Google (data) ou assumido (suposição, ver README)."
+     }
+    ]
+   }
+  },
+  {
+   "name": "ptax_mensal",
+   "path": "ptax_mensal.csv",
+   "format": "csv",
+   "mediatype": "text/csv",
+   "description": "Cotação PTAX (venda) média mensal, Banco Central.",
+   "schema": {
+    "fields": [
+     {
+      "name": "ano_mes",
+      "type": "string",
+      "description": "Mês (AAAA-MM)."
+     },
+     {
+      "name": "ptax_venda_media",
+      "type": "number",
+      "description": "Cotação PTAX de venda, média do mês (R$ por US$)."
+     },
+     {
+      "name": "ptax_fonte",
+      "type": "string",
+      "description": "'media do mes' ou 'ultima media disponivel' (mês corrente sem cotação)."
      }
     ]
    }

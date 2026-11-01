@@ -39,9 +39,12 @@ textarea{min-height:90px;resize:vertical}.btn{background:var(--acc);color:#fff;b
 .m.u{background:var(--acc);color:#fff;align-self:flex-end}@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .m.u{color:#0e1118}}
 .m.a{background:var(--bg);border:1px solid var(--line);align-self:flex-start}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.85rem}pre{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;overflow:auto}
+dl{margin:0}dt{font-weight:600;margin-top:10px}dd{margin:2px 0 0;color:var(--mut)}details.alt{margin-top:8px}details.alt summary{cursor:pointer;color:var(--acc);padding:6px 0}.tldr{border-left:4px solid var(--acc)}.tldr ul{margin:6px 0 0;padding-left:20px}.tldr li{margin:6px 0;font-size:1.05rem}
+body.foco .extra{display:none}body.foco *{animation:none!important;transition:none!important}@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 footer{max-width:1100px;margin:24px auto;padding:0 16px 40px;color:var(--mut);font-size:.85rem}
 .sr{position:absolute;left:-9999px}.skip:focus{left:8px;top:8px;background:var(--card);padding:8px 12px;z-index:10}
-html{scroll-padding-top:56px}:focus-visible{outline:2px solid var(--acc);outline-offset:2px}.btn:focus-visible{outline-color:var(--ink)}
+html{scroll-padding-top:56px}.indep{font-size:.9rem;margin-top:6px!important}.sub,.note,header p{max-width:75ch}.sub{font-size:.95rem}.result{font-size:1.15rem;font-weight:600;margin:6px 0 12px}
+@media (max-width:640px){nav .in{flex-wrap:wrap;overflow:visible}nav::after{display:none}nav button{padding:8px 10px}}:focus-visible{outline:2px solid var(--acc);outline-offset:2px}.btn:focus-visible{outline-color:var(--ink)}
 </style>
 </head>
 <body>
@@ -49,37 +52,67 @@ html{scroll-padding-top:56px}:focus-visible{outline:2px solid var(--acc);outline
 <noscript><div class="note" style="max-width:1100px;margin:12px auto">Esta página precisa de JavaScript para os gráficos. Os dados estão em <a href="data/resumo.json">JSON</a>, <a href="llms.txt">llms.txt</a> e <a href="data/datapackage.json">datapackage.json</a>.</div></noscript>
 <header>
   <h1>Galileu Aberto</h1>
-  <p>Dados agregados do uso do Galileu na Justiça do Trabalho, abertos para pessoas e agentes de IA, e um chat open source para testar os mesmos modelos. Projeto independente, sem vínculo oficial com o TRT4.</p>
+  <p>Quanto a IA Galileu é usada na Justiça do Trabalho, e quanto custa. Dados abertos para pessoas e programas.</p>
+  <p class="indep"><b>Site independente:</b> não é do governo nem do TRT4. Os números vêm de dados públicos; custo e água são estimativas.</p>
 </header>
 <nav><div class="in" role="tablist" aria-label="Seções">
   <button role="tab" id="tab-geral" aria-controls="geral" aria-selected="true" tabindex="0" data-t="geral">Visão geral</button>
   <button role="tab" id="tab-trib" aria-controls="trib" aria-selected="false" tabindex="-1" data-t="trib">Tribunais</button>
-  <button role="tab" id="tab-mod" aria-controls="mod" aria-selected="false" tabindex="-1" data-t="mod">Modelos e custo</button>
-  <button role="tab" id="tab-chat" aria-controls="chat" aria-selected="false" tabindex="-1" data-t="chat">Galileu aberto</button>
+  <button role="tab" id="tab-mod" aria-controls="mod" aria-selected="false" tabindex="-1" data-t="mod">Modelos</button>
+  <button role="tab" id="tab-custo" aria-controls="custo" aria-selected="false" tabindex="-1" data-t="custo">Custo e água</button>
+  <button role="tab" id="tab-chat" aria-controls="chat" aria-selected="false" tabindex="-1" data-t="chat">Chat de teste</button>
   <button role="tab" id="tab-dados" aria-controls="dados" aria-selected="false" tabindex="-1" data-t="dados">Dados e API</button>
   <button role="tab" id="tab-sobre" aria-controls="sobre" aria-selected="false" tabindex="-1" data-t="sobre">Como ler</button>
-</div></nav>
+</div><button class="btn sec" id="foco" aria-pressed="false" title="Mostra só o essencial e remove animações">Modo foco</button></nav>
 <main id="main">
 <section id="geral" role="tabpanel" aria-labelledby="tab-geral" tabindex="0">
+  <div class="card tldr" id="tldr" aria-live="polite"><h2>Em 30 segundos</h2><ul id="tldr-list"><li>Carregando…</li></ul>
+    <p class="sub" style="margin:8px 0 0">Quer mais detalhe? Use as abas acima. Cada gráfico tem uma frase explicando o que ele mostra e uma tabela com os mesmos números.</p></div>
   <div class="grid kpis" id="kpis"></div>
   <div class="grid two" style="margin-top:12px">
-    <div class="card"><h2>Minutas por mês</h2><p class="sub">Soma dos valores diários por mês. Um processo pode contar em mais de um dia, então a soma não equivale ao total oficial de 458.696.</p><div class="chart"><canvas data-alt id="c-mes" role="img" aria-label="Minutas por mês"></canvas></div></div>
-    <div class="card"><h2>Minutas por jurisdição</h2><p class="sub">Total de processos distintos.</p><div class="chart"><canvas data-alt id="c-jur" role="img" aria-label="Minutas por jurisdição"></canvas></div></div>
+    <div class="card"><h2>Minutas por mês</h2><p class="sub" id="s-mes">Soma dos valores diários por mês. Um processo pode contar em mais de um dia, então a soma não equivale ao total oficial de 458.696.</p><div class="chart"><canvas id="c-mes" role="img" aria-label="Minutas por mês"></canvas></div><div id="alt-mes"></div></div>
+    <div class="card"><h2>Minutas por jurisdição</h2><p class="sub" id="s-jur">Total de processos distintos.</p><div class="chart"><canvas id="c-jur" role="img" aria-label="Minutas por jurisdição"></canvas></div><div id="alt-jur"></div></div>
   </div>
-  <div class="card" style="margin-top:12px"><h2>Minutas por dia</h2><p class="sub">Todos os tribunais. Passe o mouse ou toque para ver o valor.</p><div class="chart"><canvas data-alt id="c-dia" role="img" aria-label="Minutas por dia"></canvas></div></div>
+  <div class="card extra" style="margin-top:12px"><h2>Minutas por dia</h2><p class="sub">Todos os tribunais. Passe o mouse ou toque para ver o valor.</p><div class="chart"><canvas id="c-dia" role="img" aria-label="Minutas por dia"></canvas></div><div id="alt-dia"></div></div>
 </section>
 <section id="trib" role="tabpanel" aria-labelledby="tab-trib" tabindex="0" hidden>
   <div class="card"><h2>Minutas por tribunal</h2><p class="sub">Selecione um tribunal para ver a evolução diária.</p>
     <label for="sel-trib">Tribunal</label><select id="sel-trib"></select>
-    <div class="chart" style="margin-top:10px"><canvas data-alt id="c-trib" role="img" aria-label="Minutas por tribunal"></canvas></div></div>
-  <div class="card" style="margin-top:12px"><h2>Tabela</h2><div style="overflow:auto"><table id="t-trib"></table></div></div>
+    <div class="chart" style="margin-top:10px"><canvas id="c-trib" role="img" aria-label="Minutas por tribunal"></canvas></div><div id="alt-trib"></div></div>
+  <div class="card extra" style="margin-top:12px"><h2>Tabela</h2><div style="overflow:auto"><table id="t-trib"></table></div></div>
 </section>
 <section id="mod" role="tabpanel" aria-labelledby="tab-mod" tabindex="0" hidden>
   <div class="grid two">
-    <div class="card"><h2>Requisições por modelo</h2><p class="sub">Cada requisição é uma chamada ao modelo; uma minuta pode gerar várias.</p><div class="chart"><canvas data-alt id="c-mod" role="img" aria-label="Requisições por modelo"></canvas></div></div>
-    <div class="card"><h2>Tokens por mês e modelo</h2><p class="sub">Tokens de entrada, em bilhões.</p><div class="chart"><canvas data-alt id="c-tok" role="img" aria-label="Tokens por mês"></canvas></div></div>
+    <div class="card"><h2>Requisições por modelo</h2><p class="sub" id="s-mod">Cada requisição é uma chamada ao modelo; uma minuta pode gerar várias.</p><div class="chart"><canvas id="c-mod" role="img" aria-label="Requisições por modelo"></canvas></div><div id="alt-mod"></div></div>
+    <div class="card"><h2>Tokens por mês e modelo</h2><p class="sub">Tokens de entrada, em bilhões.</p><div class="chart"><canvas id="c-tok" role="img" aria-label="Tokens por mês"></canvas></div><div id="alt-tok"></div></div>
   </div>
   <div class="card" style="margin-top:12px"><h2>Modelos</h2><div style="overflow:auto"><table id="t-mod"></table></div></div>
+</section>
+<section id="custo" role="tabpanel" aria-labelledby="tab-custo" tabindex="0" hidden>
+  <div class="note"><b>É uma estimativa nossa, a preço de lista; não é número oficial.</b> Multiplicamos o texto processado pela IA (<b>tokens</b>: pedaços de texto, cerca de ¾ de palavra) pelo preço público de cada modelo. Descontos (cache, lote, contrato) não entram, então o tribunal provavelmente pagou menos, não mais. Os preços de alguns modelos antigos vêm do painel e podem diferir da tabela atual do Google.
+    <details class="alt"><summary>Por que o painel oficial mostra só US$ 2,9 mil?</summary>O painel do Galileu só calcula custo para modelos antigos e mostra US$ 0 para os mais usados (2.5 e 3.x). Por isso refizemos a conta. Cada <b>requisição</b> é um registro de uso do modelo (uma linha na tabela de consumo); no começo eram 2 por minuta e hoje são cerca de 2,4. Preços e fontes estão na tabela no fim da aba.</details></div>
+  <div class="row" style="margin:8px 0"><span class="sub" style="margin:0">Moeda:</span>
+    <button class="btn" id="m-brl" aria-pressed="true">Reais (R$)</button><button class="btn sec" id="m-usd" aria-pressed="false">Dólares (US$)</button></div>
+  <div class="grid kpis" id="kpis-custo"></div>
+  <div class="grid two" style="margin-top:12px">
+    <div class="card"><h2>Custo estimado por modelo</h2><p class="sub" id="s-custo-mod">Quanto cada modelo custou no total.</p><div class="chart"><canvas id="c-custo-mod" role="img" aria-label="Custo estimado por modelo"></canvas></div><div id="alt-custo-mod"></div></div>
+    <div class="card extra"><h2>Custo por mês</h2><p class="sub">Empilhado por modelo.</p><div class="chart"><canvas id="c-custo-mes" role="img" aria-label="Custo por mês"></canvas></div><div id="alt-custo-mes"></div></div>
+  </div>
+  <div class="card extra" style="margin-top:12px"><h2>Entrada ou saída: onde está o custo?</h2><p class="sub">Tokens de entrada são o que se envia (processo e instruções); de saída, o que o modelo escreve. Saída custa mais por token.</p><div class="chart" style="height:260px"><canvas id="c-custo-io" role="img" aria-label="Custo de entrada e saída por modelo"></canvas></div><div id="alt-custo-io"></div></div>
+  <div class="card extra" style="margin-top:12px"><h2>Custo por tribunal</h2><p class="sub">Custo estimado e custo por minuta (minutas distintas do tribunal).</p><div style="overflow:auto"><table id="t-custo-trib"></table></div></div>
+  <div class="card" style="margin-top:12px"><h2>Água: um cálculo de escala</h2>
+    <p class="sub">Passo 1: escolha um cenário. Passo 2: veja o resultado.</p>
+    <p class="result" id="agua-res" aria-live="polite"></p>
+    <div class="grid two">
+      <div><label for="mult">Passo 1: quanto cada requisição pesa, comparada a uma pergunta comum a um chat de IA?</label>
+        <select id="mult"><option value="1">1× (mínimo possível)</option><option value="10">10×</option><option value="100">100×</option><option value="1000">1.000×</option></select>
+        <p class="sub">Não sabemos qual é o certo: os pedidos do Galileu levam processos inteiros e são bem maiores que uma pergunta comum. Por isso 1× é o mínimo, não o provável.</p>
+        <label for="ml">Água por pergunta comum (mL)</label><input id="ml" type="number" min="0" step="0.01" value="0.26" inputmode="decimal">
+        <button class="btn sec" id="ml-reset" style="margin-top:8px">Restaurar padrão</button></div>
+      <div class="grid kpis" id="kpis-agua"></div></div>
+    <details class="alt"><summary>De onde vem 0,26 mL e o que isso não prova</summary>O Google publicou em agosto de 2025 que um prompt de texto mediano do aplicativo Gemini usa cerca de 0,26 mL de água (resfriamento do data center) e 0,24 Wh de energia. O número não inclui a água indireta da geração de energia, vale para o aplicativo e não para a API, e não foi medido para os modelos usados aqui. Os multiplicadores 10×, 100× e 1.000× são exemplos nossos, sem fonte. A água estimada aqui é proporcional ao número de requisições, assim como o custo em reais. Por isso os dois sobem juntos no gráfico (<span id="corr"></span>): isso vem da conta, não é uma descoberta. O consumo real depende do data center e da região.</details>
+    <div class="chart" style="height:300px"><canvas id="c-agua" role="img" aria-label="Custo mensal contra água estimada"></canvas></div><div id="alt-agua"></div></div>
+  <div class="card" style="margin-top:12px"><h2>Preços usados</h2><p class="sub">US$ por milhão de tokens.</p><div style="overflow:auto"><table id="t-precos"></table></div></div>
 </section>
 <section id="chat" role="tabpanel" aria-labelledby="tab-chat" tabindex="0" hidden>
   <div class="note"><b>Antes de usar.</b> Esta é uma implementação independente: não usa os prompts do Galileu real e não substitui o trabalho de magistrados. <b>Não cole dados reais de processos, nomes ou documentos sigilosos.</b> A conversa vai direto do seu navegador ao Google; sua chave de API fica só neste navegador (sessão) e nunca passa por nós.</div>
@@ -114,10 +147,24 @@ html{scroll-padding-top:56px}:focus-visible{outline:2px solid var(--acc);outline
     <li>Os dados vêm do painel público do Galileu, coletado em <span id="when"></span>. Podem mudar quando o painel for atualizado.</li>
     <li>Nada aqui identifica magistrados, servidores ou processos.</li>
   </ul></div>
+  <div class="card" style="margin-top:12px"><h2>Glossário em linguagem simples</h2>
+  <dl id="gloss">
+    <dt>Minuta</dt><dd>Rascunho de sentença que a IA ajuda a escrever. Um humano sempre revisa.</dd>
+    <dt>Modelo de IA</dt><dd>O “cérebro” usado, como gemini-2.5-flash. Cada um tem velocidade e preço diferentes.</dd>
+    <dt>Requisição</dt><dd>Cada vez que o sistema pede algo ao modelo. Uma minuta pode precisar de várias.</dd>
+    <dt>Token</dt><dd>Pedaço de texto, mais ou menos três quartos de uma palavra. Modelos cobram por token.</dd>
+    <dt>Tokens de entrada e de saída</dt><dd>Entrada é o texto enviado ao modelo; saída é o texto que ele devolve.</dd>
+    <dt>Jurisdição</dt><dd>1º Grau (primeira instância), 2º Grau (recursos) e Admis. RR (admissibilidade de recurso de revista).</dd>
+    <dt>Custo estimado</dt><dd>Nossa conta: tokens × preço público de cada modelo × dólar do dia. Não é o valor pago pelo tribunal.</dd>
+    <dt>Flash, Lite, Pro, preview</dt><dd>Tamanhos e fases de modelos. Flash e Lite são mais rápidos e baratos; Pro é mais potente; preview é versão em teste.</dd>
+    <dt>PTAX</dt><dd>Cotação oficial do dólar do Banco Central, usada para converter em reais.</dd>
+    <dt>Contagem distinta</dt><dd>Cada processo conta uma vez, mesmo que apareça em vários dias.</dd>
+  </dl></div>
 </section>
 </main>
 <footer>Galileu Aberto · GPL-3.0 · Projeto independente, não oficial. Marca "Galileu" pertence aos seus titulares.</footer>
 <script src="vendor/chart.umd.min.js" defer></script>
 <script src="app.js" defer></script>
+<script src="viz.js" defer></script>
 </body>
 </html>
